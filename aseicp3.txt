@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="fooditems" ng-controller="foodcntrl">
+<head>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script>
+        angular.module('fooditems', [])
+            .controller('foodcntrl', function($scope, $http) {
+                $("#speech").hide();
+                $scope.getvalues = function() {
+                    $http.get('https://api.edamam.com/api/nutrition-data?app_id=213d2002&app_key=45e3303996fbddc4dafb0f76cc57c795&ingr='+$scope.Item+'.json').success(function(data)
+                    {
+                        console.log(data);
+                        $scope.Calories = "Calories : " + data.calories ;
+                        $scope.TotalWeight = "Total Weight : " + data.totalWeight;
+                        var url = "http://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?username=b38f9b7d-0ebd-4020-b712-b16cf313ce4b&password=rn4Yk0UeLF7F&text="+$scope.Item +$scope.Calories;
+                        $("#speech").attr('onclick',"location.href="+"'"+url+"'");
+                        $("#speech").show();
+                    })
+                }
+            });
+    </script>
+    <style>
+
+        body  {
+            background-image: url("https://thumbs.dreamstime.com/z/healthy-food-background-studio-photo-different-fruits-vegetables-blue-backdrop-46432937.jpg");
+            background-color: powderblue;
+        }
+
+
+
+    </style>
+</head>
+<body>
+<h1 align="center" style="font-size:50px; color:darkslategrey; font-family:'sans-serif' ">Details of the Food</h1>
+<div align = "center">
+    <p>Enter the food item for details</font>  </p>
+    <input type="text" ng-model="Item" placeholder="Enter the food item" >
+
+    <button  id="btn" ng-click="getvalues()">Get Nutrition Details</button>
+
+    <p  class="Calories" ng-bind="Calories" style="color:mediumorchid" ></p>
+    <p class="TotalWeight" ng-bind="TotalWeight" style="color:#ba55d3"></p>
+
+    <input type="button" style="display: none" id="speech" value="speech"></input>
+</div>
+</div>
+</body>
+</html>
